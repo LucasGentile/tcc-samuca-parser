@@ -6,13 +6,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
 public class ApachePOIExcelWrite {
-    public static void writeExcel(Map<String, List<TickerInfoDTO>> planilhasPortfolio, String excelFile) throws IOException {
+    public static void writeExcel(Map<String, List<TickerInfoDTO>> planilhasPortfolio, String excelFilePath) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         planilhasPortfolio.forEach((sheetName,sheetListInfo)->{
@@ -20,7 +22,7 @@ public class ApachePOIExcelWrite {
             XSSFSheet sheet = workbook.createSheet(sheetName);
 
             int rowCount = 0;
-            writeFileHeader(sheet.createRow(rowCount++));
+            writeFileHeader(sheet.createRow(rowCount));
             for (TickerInfoDTO tickerInfoDTO : sheetListInfo) {
                 Row row = sheet.createRow(rowCount++);
                 writeTickerInfoRow(tickerInfoDTO, row);
@@ -28,7 +30,8 @@ public class ApachePOIExcelWrite {
         });
 
         try {
-
+            File excelFile = new File(excelFilePath);
+            Files.deleteIfExists(excelFile.toPath());
             FileOutputStream outputStream = new FileOutputStream(excelFile);
             workbook.write(outputStream);
             workbook.close();

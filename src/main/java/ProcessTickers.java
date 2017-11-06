@@ -10,9 +10,9 @@ import java.util.Map;
 /**
  * Created by lucas on 05/11/2017.
  */
-public class ProcessaAmostra {
+public class ProcessTickers {
 
-    private static final String BASE_DIRECTORY = "C:\\Users\\lucas\\Desktop\\Samuca\\Dados Anuais\\";
+    private static final String BASE_DIRECTORY = "C:\\Samuca\\Dados Anuais\\";
     private static final String YEAR = "2016";
     private static final String FILE_NAME = "\\" + YEAR + ".xlsx";
     private static final String PORTFOLIO_NAME = "\\" + YEAR + "_Portfolio50304030.xlsx";
