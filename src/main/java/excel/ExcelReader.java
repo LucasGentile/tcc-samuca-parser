@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ApachePOIExcelRead {
+public class ExcelReader {
 
 
 //    private static
 
-    public static List<TickerInfoDTO> getAmostra(String diretorio){
+    public static List<TickerInfoDTO> getTickers(String diretorio){
         List<TickerInfoDTO> amostra = new ArrayList<>();
 
         try {

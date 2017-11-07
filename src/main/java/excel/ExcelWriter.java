@@ -1,6 +1,7 @@
 package excel;
 
 import dto.TickerInfoDTO;
+import enums.PortfolioGroupNamesEnum;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -13,16 +14,16 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-public class ApachePOIExcelWrite {
-    public static void writeExcel(Map<String, List<TickerInfoDTO>> planilhasPortfolio, String excelFilePath) throws IOException {
+public class ExcelWriter {
+    public static void writeExcel(Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> planilhasPortfolio, String excelFilePath) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         planilhasPortfolio.forEach((sheetName,sheetListInfo)->{
             System.out.println("Started writing sheet: " + sheetName);
-            XSSFSheet sheet = workbook.createSheet(sheetName);
+            XSSFSheet sheet = workbook.createSheet(sheetName.name());
 
             int rowCount = 0;
-            writeFileHeader(sheet.createRow(rowCount));
+            writeFileHeader(sheet.createRow(rowCount++));
             for (TickerInfoDTO tickerInfoDTO : sheetListInfo) {
                 Row row = sheet.createRow(rowCount++);
                 writeTickerInfoRow(tickerInfoDTO, row);
@@ -41,34 +42,34 @@ public class ApachePOIExcelWrite {
     }
 
     private static void writeTickerInfoRow(TickerInfoDTO tickerInfo, Row row) {
-        Cell cell = row.createCell(1);
+        Cell cell = row.createCell(0);
         cell.setCellValue(tickerInfo.getTicker());
 
-        cell = row.createCell(2);
+        cell = row.createCell(1);
         cell.setCellValue(tickerInfo.getAno());
 
-        cell = row.createCell(3);
+        cell = row.createCell(2);
         if(tickerInfo.getSize() == null){
             cell.setCellValue("null");
         } else {
             cell.setCellValue(tickerInfo.getSize());
         }
 
-        cell = row.createCell(4);
+        cell = row.createCell(3);
         if(tickerInfo.getBmme() == null){
             cell.setCellValue("null");
         } else {
             cell.setCellValue(tickerInfo.getBmme());
         }
 
-        cell = row.createCell(5);
+        cell = row.createCell(4);
         if(tickerInfo.getOp() == null){
             cell.setCellValue("null");
         } else {
             cell.setCellValue(tickerInfo.getOp());
         }
 
-        cell = row.createCell(6);
+        cell = row.createCell(5);
         if(tickerInfo.getInv() == null){
             cell.setCellValue("null");
         } else {
