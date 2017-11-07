@@ -1,6 +1,5 @@
 import dto.TickerInfoDTO;
 import enums.PortfolioGroupNamesEnum;
-import enums.SortingTypeEnum;
 import excel.ExcelReader;
 import excel.ExcelWriter;
 
@@ -9,9 +8,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static enums.PortfolioGroupNamesEnum.*;
-import static enums.SortingTypeEnum.BMME;
-import static enums.SortingTypeEnum.INV;
-import static enums.SortingTypeEnum.OP;
+import static enums.SortingTypeEnum.*;
+import static utils.TickersListUtils.getDividedList;
+import static utils.TickersListUtils.sortTickersByTypeWithoutNull;
 
 /**
  * Created by lucas on 05/11/2017.
@@ -40,10 +39,10 @@ public class ProcessTickersPortfolioA {
     public static void main(String[] args) {
 
         for (String year : YEARS_LIST) {
-            System.out.println("\n################ Started processing Tickers from " + year);
-
             String fileName = "\\" + year + ".xlsx";
-            String portfolioName = "\\" + year + "_Portfolio50304030.xlsx";
+            String portfolioName = "\\" + year + "_Portfolio5050.xlsx";
+
+            System.out.println("\n################ Started processing Tickers for " + portfolioName);
 
             String readDirectory = BASE_DIRECTORY + year + fileName;
             String writeDirectory = BASE_DIRECTORY + year + portfolioName;
@@ -71,15 +70,10 @@ public class ProcessTickersPortfolioA {
         int tickersTotalSize = allTickers.size();
         System.out.println("Total Size: " + tickersTotalSize);
 
-
-        System.out.println("#### Creating S");
-
         int sizeS = Math.round(tickersTotalSize / 2);
 
-        List<TickerInfoDTO> listS = new ArrayList<>(allTickers.stream().limit(sizeS).collect(Collectors.toList()));
-        portfolioMap.put(S, listS);
-
-        System.out.println("S Size: " + listS.size());
+        // S
+        List<TickerInfoDTO> listS = getDividedList(allTickers, portfolioMap, sizeS, S, true);
 
         List<TickerInfoDTO> listSBM = sortTickersByTypeWithoutNull(listS, S, BMME);
         PortfolioGroupNamesEnum[] S_BMME_SUBGROUPS = {S_L3,S_NBM4,S_H3};
@@ -93,15 +87,8 @@ public class ProcessTickersPortfolioA {
         PortfolioGroupNamesEnum[] S_INV_SUBGROUPS = {S_C3,S_NINV4,S_A3};
         getSubgroupsLists(portfolioMap, listSINV, S_INV_SUBGROUPS);
 
-
-        System.out.println("#### Creating B");
-
-//        long sizeB = Math.round(Math.floor((double)tickersTotalSize/2));
-
-        List<TickerInfoDTO> listB = new ArrayList<>(allTickers.stream().skip(sizeS).collect(Collectors.toList()));
-        portfolioMap.put(B, listB);
-
-        System.out.println("B Size: " + listB.size());
+        // B
+        List<TickerInfoDTO> listB = getDividedList(allTickers, portfolioMap, sizeS, B, true);
 
         List<TickerInfoDTO> listBBM = sortTickersByTypeWithoutNull(listB, B, BMME);
         PortfolioGroupNamesEnum[] B_BMME_SUBGROUPS = {B_L3,B_NBM4,B_H3};
@@ -138,33 +125,6 @@ public class ProcessTickersPortfolioA {
         System.out.println(subgroupNames[2].name() + " size: " + listThirtyBigger.size());
     }
 
-    private static List<TickerInfoDTO> sortTickersByTypeWithoutNull(List<TickerInfoDTO> subgroupTickersList, PortfolioGroupNamesEnum listGroupName, SortingTypeEnum sortingType) {
-        System.out.println("## Sorting " + listGroupName.name() + " by " + sortingType.name() + " and discarding null values");
 
-        List<TickerInfoDTO> sortedListWithouNullValues;
-
-        if(BMME.equals(sortingType)){
-            sortedListWithouNullValues = subgroupTickersList.stream()
-                    .filter(e -> e.getBmme() != null)
-                    .sorted(Comparator.comparingDouble(TickerInfoDTO::getBmme))
-                    .collect(Collectors.toList());
-        } else if(OP.equals(sortingType)){
-            sortedListWithouNullValues = subgroupTickersList.stream()
-                    .filter(e -> e.getOp() != null)
-                    .sorted(Comparator.comparingDouble(TickerInfoDTO::getOp))
-                    .collect(Collectors.toList());
-        } else if (INV.equals(sortingType)){
-            sortedListWithouNullValues = subgroupTickersList.stream()
-                    .filter(e -> e.getInv() != null)
-                    .sorted(Comparator.comparingDouble(TickerInfoDTO::getInv))
-                    .collect(Collectors.toList());
-        } else {
-            return null;
-        }
-
-        System.out.println(listGroupName.name() + " Size without null " + sortingType.name() + " values: " + sortedListWithouNullValues.size());
-
-        return sortedListWithouNullValues;
-    }
 
 }

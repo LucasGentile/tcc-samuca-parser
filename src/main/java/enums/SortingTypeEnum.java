@@ -6,5 +6,5 @@ package enums;
 public enum SortingTypeEnum {
     BMME,
     OP,
-    INV;
+    INV
 }

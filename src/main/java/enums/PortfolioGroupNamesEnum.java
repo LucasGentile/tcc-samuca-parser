@@ -63,5 +63,5 @@ public enum PortfolioGroupNamesEnum {
     B_L5_R_C,
     B_L5_W,
     B_L5_W_A,
-    B_L5_W_C;
+    B_L5_W_C
 }
