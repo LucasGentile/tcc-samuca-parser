@@ -16,7 +16,7 @@ import static enums.SortingTypeEnum.OP;
 /**
  * Created by lucas on 05/11/2017.
  */
-public class ProcessTickers {
+public class ProcessTickersPortfolioA {
     private static final String BASE_DIRECTORY = "C:\\Samuca\\Dados Anuais\\";
 
     private static final String[] YEARS_LIST = {"2016",
@@ -57,7 +57,7 @@ public class ProcessTickers {
             System.out.println("## Sorting all tickers by size");
             allTickers.sort(Comparator.comparingDouble(TickerInfoDTO::getSize));
 
-            generateTickersSpreedsheetsPortfolioA(allTickers, portfolioMap);
+            generateTickersSpreedsheets(allTickers, portfolioMap);
 
             try {
                 ExcelWriter.writeExcel(portfolioMap, writeDirectory);
@@ -67,7 +67,7 @@ public class ProcessTickers {
         }
     }
 
-    private static void generateTickersSpreedsheetsPortfolioA(List<TickerInfoDTO> allTickers, Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap) {
+    private static void generateTickersSpreedsheets(List<TickerInfoDTO> allTickers, Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap) {
         int tickersTotalSize = allTickers.size();
         System.out.println("Total Size: " + tickersTotalSize);
 
