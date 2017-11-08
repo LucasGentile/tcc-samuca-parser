@@ -18,20 +18,20 @@ public class ProcessTickersPortfolioB {
     private static final String BASE_DIRECTORY = "C:\\Samuca\\Dados Anuais\\";
 
     private static final String[] YEARS_LIST = {"2016",
-//                                                "2015",
-//                                                "2014",
-//                                                "2013",
-//                                                "2012",
-//                                                "2011",
-//                                                "2010",
-//                                                "2009",
-//                                                "2008",
-//                                                "2007",
-//                                                "2006",
-//                                                "2005",
-//                                                "2004",
-//                                                "2003",
-//                                                "2002"
+                                                "2015",
+                                                "2014",
+                                                "2013",
+                                                "2012",
+                                                "2011",
+                                                "2010",
+                                                "2009",
+                                                "2008",
+                                                "2007",
+                                                "2006",
+                                                "2005",
+                                                "2004",
+                                                "2003",
+                                                "2002"
     };
 
 
@@ -73,12 +73,12 @@ public class ProcessTickersPortfolioB {
 
         List<TickerInfoDTO> listS = getDividedList(allTickers, portfolioMap, sizeS, S, true);
         List<TickerInfoDTO> listSSortedByBM = sortTickersByTypeWithoutNull(listS, S, BMME);
-        PortfolioGroupNamesEnum[] S_SUBGROUPS = {S_L5,S_L5_W,S_L5_W_A,S_L5_W_C,S_L5_R,S_L5_R_A,S_L5_R_C,S_H5,S_H5_R,S_H5_W,S_H5_W_A,S_H5_W_C,S_H5_R_A,S_H5_R_C};
+        PortfolioGroupNamesEnum[] S_SUBGROUPS = {S_L5,S_L5_W,S_L5_W_A,S_L5_W_C,S_L5_R,S_L5_R_A,S_L5_R_C,S_H5,S_H5_W,S_H5_W_A,S_H5_W_C,S_H5_R,S_H5_R_A,S_H5_R_C};
         getSubgroupsLists(portfolioMap, listSSortedByBM, S_SUBGROUPS);
 
         List<TickerInfoDTO> listB = getDividedList(allTickers, portfolioMap, sizeS, B, false);
         List<TickerInfoDTO> listBSortedByBM = sortTickersByTypeWithoutNull(listB, B, BMME);
-        PortfolioGroupNamesEnum[] B_SUBGROUPS = {B_L5,B_L5_W,B_L5_W_A,B_L5_W_C,B_L5_R,B_L5_R_A,B_L5_R_C,B_H5,B_H5_R,B_H5_W,B_H5_W_A,B_H5_W_C,B_H5_R_A,B_H5_R_C};
+        PortfolioGroupNamesEnum[] B_SUBGROUPS = {B_L5,B_L5_W,B_L5_W_A,B_L5_W_C,B_L5_R,B_L5_R_A,B_L5_R_C,B_H5,B_H5_W,B_H5_W_A,B_H5_W_C,B_H5_R,B_H5_R_A,B_H5_R_C};
         getSubgroupsLists(portfolioMap, listBSortedByBM, B_SUBGROUPS);
     }
 
@@ -119,12 +119,12 @@ public class ProcessTickersPortfolioB {
         List<TickerInfoDTO> listH5WA = getDividedList(listH5WSortedByINV, portfolioMap, sizeH5WSortedByINV, SUBGROUPS[9], true);
         List<TickerInfoDTO> listH5WC = getDividedList(listH5WSortedByINV, portfolioMap, sizeH5WSortedByINV, SUBGROUPS[10], false);
 
-        List<TickerInfoDTO> listH5R = getDividedList(listH5SortedByOP, portfolioMap, sizeH5SortedByOP, S_H5_R, false);
+        List<TickerInfoDTO> listH5R = getDividedList(listH5SortedByOP, portfolioMap, sizeH5SortedByOP,  SUBGROUPS[11], false);
 
-        List<TickerInfoDTO> listH5RSortedByINV = sortTickersByTypeWithoutNull(listH5R, S_H5_R, INV);
+        List<TickerInfoDTO> listH5RSortedByINV = sortTickersByTypeWithoutNull(listH5R,  SUBGROUPS[11], INV);
         int sizeH5RSortedByINV = Math.round(listH5RSortedByINV.size() / 2);
 
-        List<TickerInfoDTO> listH5RA = getDividedList(listH5RSortedByINV, portfolioMap, sizeH5RSortedByINV, SUBGROUPS[11], true);
-        List<TickerInfoDTO> listH5RC = getDividedList(listH5RSortedByINV, portfolioMap, sizeH5RSortedByINV, SUBGROUPS[12], false);
+        List<TickerInfoDTO> listH5RA = getDividedList(listH5RSortedByINV, portfolioMap, sizeH5RSortedByINV, SUBGROUPS[12], true);
+        List<TickerInfoDTO> listH5RC = getDividedList(listH5RSortedByINV, portfolioMap, sizeH5RSortedByINV, SUBGROUPS[13], false);
     }
 }

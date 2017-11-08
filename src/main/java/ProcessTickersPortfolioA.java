@@ -19,20 +19,20 @@ public class ProcessTickersPortfolioA {
     private static final String BASE_DIRECTORY = "C:\\Samuca\\Dados Anuais\\";
 
     private static final String[] YEARS_LIST = {"2016",
-//                                                "2015",
-//                                                "2014",
-//                                                "2013",
-//                                                "2012",
-//                                                "2011",
-//                                                "2010",
-//                                                "2009",
-//                                                "2008",
-//                                                "2007",
-//                                                "2006",
-//                                                "2005",
-//                                                "2004",
-//                                                "2003",
-//                                                "2002"
+                                                "2015",
+                                                "2014",
+                                                "2013",
+                                                "2012",
+                                                "2011",
+                                                "2010",
+                                                "2009",
+                                                "2008",
+                                                "2007",
+                                                "2006",
+                                                "2005",
+                                                "2004",
+                                                "2003",
+                                                "2002"
     };
 
 
@@ -40,7 +40,7 @@ public class ProcessTickersPortfolioA {
 
         for (String year : YEARS_LIST) {
             String fileName = "\\" + year + ".xlsx";
-            String portfolioName = "\\" + year + "_Portfolio5050.xlsx";
+            String portfolioName = "\\" + year + "_Portfolio50304030.xlsx";
 
             System.out.println("\n################ Started processing Tickers for " + portfolioName);
 
