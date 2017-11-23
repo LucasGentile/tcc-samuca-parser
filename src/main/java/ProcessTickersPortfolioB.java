@@ -4,12 +4,14 @@ import excel.ExcelReader;
 import excel.ExcelWriter;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import static enums.PortfolioGroupNamesEnum.*;
 import static enums.SortingTypeEnum.*;
-import static utils.TickersListUtils.getDividedList;
-import static utils.TickersListUtils.sortTickersByTypeWithoutNull;
+import static utils.TickersListUtils.*;
 
 /**
  * Created by lucas on 05/11/2017.
@@ -52,8 +54,7 @@ public class ProcessTickersPortfolioB {
             //Create portfolio map
             SortedMap<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap = new TreeMap<>();
 
-            System.out.println("## Sorting all tickers by size");
-            allTickers.sort(Comparator.comparingDouble(TickerInfoDTO::getSize));
+
 
             generateTickersSpreedsheets(allTickers, portfolioMap);
 
@@ -69,62 +70,72 @@ public class ProcessTickersPortfolioB {
         int tickersTotalSize = allTickers.size();
         System.out.println("Total Size: " + tickersTotalSize);
 
+        List<TickerInfoDTO> listAllTickersWithoutAnyNullValue = sortTickersBySizeWithoutAnyNullValue(allTickers);
+
         int sizeS = Math.round(tickersTotalSize / 2);
 
-        List<TickerInfoDTO> listS = getDividedList(allTickers, portfolioMap, sizeS, S, true);
-        List<TickerInfoDTO> listSSortedByBM = sortTickersByTypeWithoutNull(listS, S, BMME);
-        PortfolioGroupNamesEnum[] S_SUBGROUPS = {S_L5,S_L5_W,S_L5_W_A,S_L5_W_C,S_L5_R,S_L5_R_A,S_L5_R_C,S_H5,S_H5_W,S_H5_W_A,S_H5_W_C,S_H5_R,S_H5_R_A,S_H5_R_C};
+        List<TickerInfoDTO> listS = getDividedList(listAllTickersWithoutAnyNullValue, sizeS, S, true);
+        List<TickerInfoDTO> listSSortedByBM = sortTickersByType(listS, S, BMME);
+        PortfolioGroupNamesEnum[] S_SUBGROUPS = {S_L,S_L_W,S_L_W_A,S_L_W_C,S_L_R,S_L_R_A,S_L_R_C,S_H,S_H_W,S_H_W_A,S_H_W_C,S_H_R,S_H_R_A,S_H_R_C};
         getSubgroupsLists(portfolioMap, listSSortedByBM, S_SUBGROUPS);
 
-        List<TickerInfoDTO> listB = getDividedList(allTickers, portfolioMap, sizeS, B, false);
-        List<TickerInfoDTO> listBSortedByBM = sortTickersByTypeWithoutNull(listB, B, BMME);
-        PortfolioGroupNamesEnum[] B_SUBGROUPS = {B_L5,B_L5_W,B_L5_W_A,B_L5_W_C,B_L5_R,B_L5_R_A,B_L5_R_C,B_H5,B_H5_W,B_H5_W_A,B_H5_W_C,B_H5_R,B_H5_R_A,B_H5_R_C};
+        List<TickerInfoDTO> listB = getDividedList(listAllTickersWithoutAnyNullValue, sizeS, B, false);
+        List<TickerInfoDTO> listBSortedByBM = sortTickersByType(listB, B, BMME);
+        PortfolioGroupNamesEnum[] B_SUBGROUPS = {B_L,B_L_W,B_L_W_A,B_L_W_C,B_L_R,B_L_R_A,B_L_R_C,B_H,B_H_W,B_H_W_A,B_H_W_C,B_H_R,B_H_R_A,B_H_R_C};
         getSubgroupsLists(portfolioMap, listBSortedByBM, B_SUBGROUPS);
     }
 
     private static void getSubgroupsLists(Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap, List<TickerInfoDTO> tickersList, PortfolioGroupNamesEnum[] SUBGROUPS) {
         int sizeSortedByBM = Math.round(tickersList.size() / 2);
 
-        List<TickerInfoDTO> listL5 = getDividedList(tickersList, portfolioMap, sizeSortedByBM, SUBGROUPS[0], true);
+        List<TickerInfoDTO> listL = getDividedList(tickersList, sizeSortedByBM, SUBGROUPS[0], true);
 
-        List<TickerInfoDTO> listL5SortedByOP = sortTickersByTypeWithoutNull(listL5, SUBGROUPS[0], OP);
-        int sizeL5SortedByOP = Math.round(listL5SortedByOP.size() / 2);
+        List<TickerInfoDTO> listLSortedByOP = sortTickersByType(listL, SUBGROUPS[0], OP);
+        int sizeLSortedByOP = Math.round(listLSortedByOP.size() / 2);
 
-        List<TickerInfoDTO> listL5W = getDividedList(listL5SortedByOP, portfolioMap, sizeL5SortedByOP, SUBGROUPS[1], true);
+        List<TickerInfoDTO> listLW = getDividedList(listLSortedByOP, sizeLSortedByOP, SUBGROUPS[1], true);
 
-        List<TickerInfoDTO> listL5WSortedByINV = sortTickersByTypeWithoutNull(listL5W, SUBGROUPS[1], INV);
-        int sizeL5WSortedByINV = Math.round(listL5WSortedByINV.size() / 2);
+        List<TickerInfoDTO> listLWSortedByINV = sortTickersByType(listLW, SUBGROUPS[1], INV);
+        int sizeLWSortedByINV = Math.round(listLWSortedByINV.size() / 2);
 
-        List<TickerInfoDTO> listL5WA = getDividedList(listL5WSortedByINV, portfolioMap, sizeL5WSortedByINV, SUBGROUPS[2], true);
-        List<TickerInfoDTO> listL5WC = getDividedList(listL5WSortedByINV, portfolioMap, sizeL5WSortedByINV, SUBGROUPS[3], false);
+        List<TickerInfoDTO> listLWA = getDividedList(listLWSortedByINV, sizeLWSortedByINV, SUBGROUPS[2], true);
+        createSubGroup(listLWA, portfolioMap, SUBGROUPS[2]);
+        List<TickerInfoDTO> listLWC = getDividedList(listLWSortedByINV, sizeLWSortedByINV, SUBGROUPS[3], false);
+        createSubGroup(listLWC, portfolioMap, SUBGROUPS[3]);
 
-        List<TickerInfoDTO> listL5R = getDividedList(listL5SortedByOP, portfolioMap, sizeL5SortedByOP, SUBGROUPS[4], false);
+        List<TickerInfoDTO> listLR = getDividedList(listLSortedByOP, sizeLSortedByOP, SUBGROUPS[4], false);
 
-        List<TickerInfoDTO> listL5RSortedByINV = sortTickersByTypeWithoutNull(listL5R, SUBGROUPS[4], INV);
-        int sizeL5RSortedByINV = Math.round(listL5RSortedByINV.size() / 2);
+        List<TickerInfoDTO> listLRSortedByINV = sortTickersByType(listLR, SUBGROUPS[4], INV);
+        int sizeLRSortedByINV = Math.round(listLRSortedByINV.size() / 2);
 
-        List<TickerInfoDTO> listL5RA = getDividedList(listL5RSortedByINV, portfolioMap, sizeL5RSortedByINV, SUBGROUPS[5], true);
-        List<TickerInfoDTO> listL5RC = getDividedList(listL5RSortedByINV, portfolioMap, sizeL5RSortedByINV, SUBGROUPS[6], false);
+        List<TickerInfoDTO> listLRA = getDividedList(listLRSortedByINV, sizeLRSortedByINV, SUBGROUPS[5], true);
+        createSubGroup(listLRA, portfolioMap, SUBGROUPS[5]);
+        List<TickerInfoDTO> listLRC = getDividedList(listLRSortedByINV, sizeLRSortedByINV, SUBGROUPS[6], false);
+        createSubGroup(listLRC, portfolioMap, SUBGROUPS[6]);
 
-        List<TickerInfoDTO> listH5 = getDividedList(tickersList, portfolioMap, sizeSortedByBM, SUBGROUPS[7], false);
+        List<TickerInfoDTO> listH = getDividedList(tickersList, sizeSortedByBM, SUBGROUPS[7], false);
 
-        List<TickerInfoDTO> listH5SortedByOP = sortTickersByTypeWithoutNull(listH5, SUBGROUPS[7], OP);
-        int sizeH5SortedByOP = Math.round(listH5SortedByOP.size() / 2);
+        List<TickerInfoDTO> listHSortedByOP = sortTickersByType(listH, SUBGROUPS[7], OP);
+        int sizeHSortedByOP = Math.round(listHSortedByOP.size() / 2);
 
-        List<TickerInfoDTO> listH5W = getDividedList(listH5SortedByOP, portfolioMap, sizeH5SortedByOP, SUBGROUPS[8], true);
+        List<TickerInfoDTO> listHW = getDividedList(listHSortedByOP, sizeHSortedByOP, SUBGROUPS[8], true);
 
-        List<TickerInfoDTO> listH5WSortedByINV = sortTickersByTypeWithoutNull(listH5W, SUBGROUPS[8], INV);
-        int sizeH5WSortedByINV = Math.round(listH5WSortedByINV.size() / 2);
+        List<TickerInfoDTO> listHWSortedByINV = sortTickersByType(listHW, SUBGROUPS[8], INV);
+        int sizeHWSortedByINV = Math.round(listHWSortedByINV.size() / 2);
 
-        List<TickerInfoDTO> listH5WA = getDividedList(listH5WSortedByINV, portfolioMap, sizeH5WSortedByINV, SUBGROUPS[9], true);
-        List<TickerInfoDTO> listH5WC = getDividedList(listH5WSortedByINV, portfolioMap, sizeH5WSortedByINV, SUBGROUPS[10], false);
+        List<TickerInfoDTO> listHWA = getDividedList(listHWSortedByINV, sizeHWSortedByINV, SUBGROUPS[9], true);
+        createSubGroup(listHWA, portfolioMap, SUBGROUPS[9]);
+        List<TickerInfoDTO> listHWC = getDividedList(listHWSortedByINV, sizeHWSortedByINV, SUBGROUPS[10], false);
+        createSubGroup(listHWC, portfolioMap, SUBGROUPS[10]);
 
-        List<TickerInfoDTO> listH5R = getDividedList(listH5SortedByOP, portfolioMap, sizeH5SortedByOP,  SUBGROUPS[11], false);
+        List<TickerInfoDTO> listHR = getDividedList(listHSortedByOP, sizeHSortedByOP,  SUBGROUPS[11], false);
 
-        List<TickerInfoDTO> listH5RSortedByINV = sortTickersByTypeWithoutNull(listH5R,  SUBGROUPS[11], INV);
-        int sizeH5RSortedByINV = Math.round(listH5RSortedByINV.size() / 2);
+        List<TickerInfoDTO> listHRSortedByINV = sortTickersByType(listHR,  SUBGROUPS[11], INV);
+        int sizeHRSortedByINV = Math.round(listHRSortedByINV.size() / 2);
 
-        List<TickerInfoDTO> listH5RA = getDividedList(listH5RSortedByINV, portfolioMap, sizeH5RSortedByINV, SUBGROUPS[12], true);
-        List<TickerInfoDTO> listH5RC = getDividedList(listH5RSortedByINV, portfolioMap, sizeH5RSortedByINV, SUBGROUPS[13], false);
+        List<TickerInfoDTO> listHRA = getDividedList(listHRSortedByINV, sizeHRSortedByINV, SUBGROUPS[12], true);
+        createSubGroup(listHRA, portfolioMap, SUBGROUPS[12]);
+        List<TickerInfoDTO> listHRC = getDividedList(listHRSortedByINV, sizeHRSortedByINV, SUBGROUPS[13], false);
+        createSubGroup(listHRC, portfolioMap, SUBGROUPS[13]);
     }
 }

@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 
 import static enums.PortfolioGroupNamesEnum.*;
 import static enums.SortingTypeEnum.*;
-import static utils.TickersListUtils.getDividedList;
-import static utils.TickersListUtils.sortTickersByTypeWithoutNull;
+import static utils.TickersListUtils.*;
 
 /**
  * Created by lucas on 05/11/2017.
@@ -53,9 +52,6 @@ public class ProcessTickersPortfolioA {
             //Create portfolio map
             SortedMap<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap = new TreeMap<>();
 
-            System.out.println("## Sorting all tickers by size");
-            allTickers.sort(Comparator.comparingDouble(TickerInfoDTO::getSize));
-
             generateTickersSpreedsheets(allTickers, portfolioMap);
 
             try {
@@ -70,36 +66,38 @@ public class ProcessTickersPortfolioA {
         int tickersTotalSize = allTickers.size();
         System.out.println("Total Size: " + tickersTotalSize);
 
+        List<TickerInfoDTO> listAllTickersWithoutAnyNullValue = sortTickersBySizeWithoutAnyNullValue(allTickers);
+
         int sizeS = Math.round(tickersTotalSize / 2);
 
         // S
-        List<TickerInfoDTO> listS = getDividedList(allTickers, portfolioMap, sizeS, S, true);
+        List<TickerInfoDTO> listS = getDividedList(listAllTickersWithoutAnyNullValue, sizeS, S, true);
 
-        List<TickerInfoDTO> listSBM = sortTickersByTypeWithoutNull(listS, S, BMME);
-        PortfolioGroupNamesEnum[] S_BMME_SUBGROUPS = {S_L3,S_NBM4,S_H3};
+        List<TickerInfoDTO> listSBM = sortTickersByType(listS, S, BMME);
+        PortfolioGroupNamesEnum[] S_BMME_SUBGROUPS = {S_L3,S_BMME4,S_H3};
         getSubgroupsLists(portfolioMap, listSBM, S_BMME_SUBGROUPS);
 
-        List<TickerInfoDTO> listSOP = sortTickersByTypeWithoutNull(listS, S, OP);
-        PortfolioGroupNamesEnum[] S_OP_SUBGROUPS = {S_W3,S_NOP4,S_R3};
+        List<TickerInfoDTO> listSOP = sortTickersByType(listS, S, OP);
+        PortfolioGroupNamesEnum[] S_OP_SUBGROUPS = {S_W3,S_OP4,S_R3};
         getSubgroupsLists(portfolioMap, listSOP, S_OP_SUBGROUPS);
 
-        List<TickerInfoDTO> listSINV = sortTickersByTypeWithoutNull(listS, S, INV);
-        PortfolioGroupNamesEnum[] S_INV_SUBGROUPS = {S_C3,S_NINV4,S_A3};
+        List<TickerInfoDTO> listSINV = sortTickersByType(listS, S, INV);
+        PortfolioGroupNamesEnum[] S_INV_SUBGROUPS = {S_A3,S_INV4,S_C3};
         getSubgroupsLists(portfolioMap, listSINV, S_INV_SUBGROUPS);
 
         // B
-        List<TickerInfoDTO> listB = getDividedList(allTickers, portfolioMap, sizeS, B, true);
+        List<TickerInfoDTO> listB = getDividedList(listAllTickersWithoutAnyNullValue, sizeS, B, false);
 
-        List<TickerInfoDTO> listBBM = sortTickersByTypeWithoutNull(listB, B, BMME);
-        PortfolioGroupNamesEnum[] B_BMME_SUBGROUPS = {B_L3,B_NBM4,B_H3};
+        List<TickerInfoDTO> listBBM = sortTickersByType(listB, B, BMME);
+        PortfolioGroupNamesEnum[] B_BMME_SUBGROUPS = {B_L3,B_BMME4,B_H3};
         getSubgroupsLists(portfolioMap, listBBM, B_BMME_SUBGROUPS);
 
-        List<TickerInfoDTO> listBOP = sortTickersByTypeWithoutNull(listB, B, OP);
-        PortfolioGroupNamesEnum[] B_OP_SUBGROUPS = {B_W3,B_NOP4,B_R3};
+        List<TickerInfoDTO> listBOP = sortTickersByType(listB, B, OP);
+        PortfolioGroupNamesEnum[] B_OP_SUBGROUPS = {B_W3,B_OP4,B_R3};
         getSubgroupsLists(portfolioMap, listBOP, B_OP_SUBGROUPS);
 
-        List<TickerInfoDTO> listBINV = sortTickersByTypeWithoutNull(listB, B, INV);
-        PortfolioGroupNamesEnum[] B_INV_SUBGROUPS = {B_C3,B_NINV4,B_A3};
+        List<TickerInfoDTO> listBINV = sortTickersByType(listB, B, INV);
+        PortfolioGroupNamesEnum[] B_INV_SUBGROUPS = {B_A3,B_INV4,B_C3};
         getSubgroupsLists(portfolioMap, listBINV, B_INV_SUBGROUPS);
 
     }
