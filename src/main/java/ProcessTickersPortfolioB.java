@@ -56,7 +56,7 @@ public class ProcessTickersPortfolioB {
 
 
 
-            generateTickersSpreedsheets(allTickers, portfolioMap);
+            generateTickersSpreadsheets(allTickers, portfolioMap);
 
             try {
                 ExcelWriter.writeExcel(portfolioMap, writeDirectory);
@@ -66,20 +66,20 @@ public class ProcessTickersPortfolioB {
         }
     }
 
-    private static void generateTickersSpreedsheets(List<TickerInfoDTO> allTickers, Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap) {
+    private static void generateTickersSpreadsheets(List<TickerInfoDTO> allTickers, Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap) {
         int tickersTotalSize = allTickers.size();
         System.out.println("Total Size: " + tickersTotalSize);
 
         List<TickerInfoDTO> listAllTickersWithoutAnyNullValue = sortTickersBySizeWithoutAnyNullValue(allTickers);
 
-        int sizeS = Math.round(tickersTotalSize / 2);
+        int sizeSWithoutNull = Math.round(listAllTickersWithoutAnyNullValue.size() / 2);
 
-        List<TickerInfoDTO> listS = getDividedList(listAllTickersWithoutAnyNullValue, sizeS, S, true);
+        List<TickerInfoDTO> listS = getDividedList(listAllTickersWithoutAnyNullValue, sizeSWithoutNull, S, true);
         List<TickerInfoDTO> listSSortedByBM = sortTickersByType(listS, S, BMME);
         PortfolioGroupNamesEnum[] S_SUBGROUPS = {S_L,S_L_W,S_L_W_A,S_L_W_C,S_L_R,S_L_R_A,S_L_R_C,S_H,S_H_W,S_H_W_A,S_H_W_C,S_H_R,S_H_R_A,S_H_R_C};
         getSubgroupsLists(portfolioMap, listSSortedByBM, S_SUBGROUPS);
 
-        List<TickerInfoDTO> listB = getDividedList(listAllTickersWithoutAnyNullValue, sizeS, B, false);
+        List<TickerInfoDTO> listB = getDividedList(listAllTickersWithoutAnyNullValue, sizeSWithoutNull, B, false);
         List<TickerInfoDTO> listBSortedByBM = sortTickersByType(listB, B, BMME);
         PortfolioGroupNamesEnum[] B_SUBGROUPS = {B_L,B_L_W,B_L_W_A,B_L_W_C,B_L_R,B_L_R_A,B_L_R_C,B_H,B_H_W,B_H_W_A,B_H_W_C,B_H_R,B_H_R_A,B_H_R_C};
         getSubgroupsLists(portfolioMap, listBSortedByBM, B_SUBGROUPS);

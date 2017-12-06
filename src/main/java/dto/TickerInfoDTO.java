@@ -1,5 +1,7 @@
 package dto;
 
+import java.util.Objects;
+
 /**
  * Created by lucas on 05/11/2017.
  */
@@ -81,5 +83,19 @@ public class TickerInfoDTO {
                 ", op=" + op +
                 ", inv=" + inv +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TickerInfoDTO)) return false;
+        TickerInfoDTO that = (TickerInfoDTO) o;
+        return Objects.equals(ticker, that.ticker) &&
+                Objects.equals(ano, that.ano);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ticker, ano);
     }
 }

@@ -17,7 +17,8 @@ import static utils.TickersListUtils.*;
 public class ProcessTickersPortfolioA {
     private static final String BASE_DIRECTORY = "C:\\Samuca\\Dados Anuais\\";
 
-    private static final String[] YEARS_LIST = {"2016",
+    private static final String[] YEARS_LIST = {
+            "2016",
                                                 "2015",
                                                 "2014",
                                                 "2013",
@@ -52,7 +53,7 @@ public class ProcessTickersPortfolioA {
             //Create portfolio map
             SortedMap<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap = new TreeMap<>();
 
-            generateTickersSpreedsheets(allTickers, portfolioMap);
+            generateTickersSpreadsheets(allTickers, portfolioMap);
 
             try {
                 ExcelWriter.writeExcel(portfolioMap, writeDirectory);
@@ -62,65 +63,82 @@ public class ProcessTickersPortfolioA {
         }
     }
 
-    private static void generateTickersSpreedsheets(List<TickerInfoDTO> allTickers, Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap) {
+    private static void generateTickersSpreadsheets(List<TickerInfoDTO> allTickers, Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap) {
         int tickersTotalSize = allTickers.size();
         System.out.println("Total Size: " + tickersTotalSize);
 
         List<TickerInfoDTO> listAllTickersWithoutAnyNullValue = sortTickersBySizeWithoutAnyNullValue(allTickers);
 
-        int sizeS = Math.round(tickersTotalSize / 2);
+        int sizeSWithoutNull = Math.round(listAllTickersWithoutAnyNullValue.size() / 2);
 
         // S
-        List<TickerInfoDTO> listS = getDividedList(listAllTickersWithoutAnyNullValue, sizeS, S, true);
+        List<TickerInfoDTO> listS = getDividedList(listAllTickersWithoutAnyNullValue, sizeSWithoutNull, S, true);
+        List<TickerInfoDTO> listBM = sortTickersByType(listAllTickersWithoutAnyNullValue, ALL, BMME);
+        List<TickerInfoDTO> listOP = sortTickersByType(listAllTickersWithoutAnyNullValue, ALL, OP);
+        List<TickerInfoDTO> listINV = sortTickersByType(listAllTickersWithoutAnyNullValue, ALL, INV);
 
-        List<TickerInfoDTO> listSBM = sortTickersByType(listS, S, BMME);
         PortfolioGroupNamesEnum[] S_BMME_SUBGROUPS = {S_L3,S_BMME4,S_H3};
-        getSubgroupsLists(portfolioMap, listSBM, S_BMME_SUBGROUPS);
+        getSubgroupsLists(portfolioMap,listS, listBM, S_BMME_SUBGROUPS);
 
-        List<TickerInfoDTO> listSOP = sortTickersByType(listS, S, OP);
         PortfolioGroupNamesEnum[] S_OP_SUBGROUPS = {S_W3,S_OP4,S_R3};
-        getSubgroupsLists(portfolioMap, listSOP, S_OP_SUBGROUPS);
+        getSubgroupsLists(portfolioMap,listS, listOP, S_OP_SUBGROUPS);
 
-        List<TickerInfoDTO> listSINV = sortTickersByType(listS, S, INV);
         PortfolioGroupNamesEnum[] S_INV_SUBGROUPS = {S_A3,S_INV4,S_C3};
-        getSubgroupsLists(portfolioMap, listSINV, S_INV_SUBGROUPS);
+        getSubgroupsLists(portfolioMap,listS, listINV, S_INV_SUBGROUPS);
 
         // B
-        List<TickerInfoDTO> listB = getDividedList(listAllTickersWithoutAnyNullValue, sizeS, B, false);
+        List<TickerInfoDTO> listB = getDividedList(listAllTickersWithoutAnyNullValue, sizeSWithoutNull, B, false);
+        List<TickerInfoDTO> listBBM = sortTickersByType(listAllTickersWithoutAnyNullValue, B, BMME);
+        List<TickerInfoDTO> listBOP = sortTickersByType(listAllTickersWithoutAnyNullValue, B, OP);
+        List<TickerInfoDTO> listBINV = sortTickersByType(listAllTickersWithoutAnyNullValue, B, INV);
 
-        List<TickerInfoDTO> listBBM = sortTickersByType(listB, B, BMME);
         PortfolioGroupNamesEnum[] B_BMME_SUBGROUPS = {B_L3,B_BMME4,B_H3};
-        getSubgroupsLists(portfolioMap, listBBM, B_BMME_SUBGROUPS);
+        getSubgroupsLists(portfolioMap,listB, listBBM, B_BMME_SUBGROUPS);
 
-        List<TickerInfoDTO> listBOP = sortTickersByType(listB, B, OP);
         PortfolioGroupNamesEnum[] B_OP_SUBGROUPS = {B_W3,B_OP4,B_R3};
-        getSubgroupsLists(portfolioMap, listBOP, B_OP_SUBGROUPS);
+        getSubgroupsLists(portfolioMap,listB, listBOP, B_OP_SUBGROUPS);
 
-        List<TickerInfoDTO> listBINV = sortTickersByType(listB, B, INV);
         PortfolioGroupNamesEnum[] B_INV_SUBGROUPS = {B_A3,B_INV4,B_C3};
-        getSubgroupsLists(portfolioMap, listBINV, B_INV_SUBGROUPS);
+        getSubgroupsLists(portfolioMap,listB, listBINV, B_INV_SUBGROUPS);
 
     }
 
-    private static void getSubgroupsLists(Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap, List<TickerInfoDTO> groupList, PortfolioGroupNamesEnum[] subgroupNames) {
+    private static void getSubgroupsLists(Map<PortfolioGroupNamesEnum, List<TickerInfoDTO>> portfolioMap, List<TickerInfoDTO> allList, List<TickerInfoDTO> groupList, PortfolioGroupNamesEnum[] subgroupNames) {
 
-        System.out.println("## Creating " + subgroupNames[0] + " (30% -)");
         int percentThirtyMinor = Math.round(30 * groupList.size() / 100);
         List<TickerInfoDTO> listThirtyMinor = new ArrayList<>(groupList.stream().limit(percentThirtyMinor).collect(Collectors.toList()));
-        portfolioMap.put(subgroupNames[0], listThirtyMinor);
-        System.out.println(subgroupNames[0].name() + " size: " + listThirtyMinor.size());
 
-        System.out.println("## Creating " + subgroupNames[1] + " (40% +-)");
         int percentFortyMedian = Math.round(40 * groupList.size() / 100);
         List<TickerInfoDTO> listFortyMedian = new ArrayList<>(groupList.stream().skip(percentThirtyMinor).limit(percentFortyMedian).collect(Collectors.toList()));
-        portfolioMap.put(subgroupNames[1], listFortyMedian);
-        System.out.println(subgroupNames[1].name() + " size: " + listFortyMedian.size());
 
-        System.out.println("## Creating " + subgroupNames[2] + " (30% +)");
         int percentThirtyBigger = (percentThirtyMinor + percentFortyMedian);
         List<TickerInfoDTO> listThirtyBigger = new ArrayList<>(groupList.stream().skip(percentThirtyBigger).collect(Collectors.toList()));
-        portfolioMap.put(subgroupNames[2], listThirtyBigger);
-        System.out.println(subgroupNames[2].name() + " size: " + listThirtyBigger.size());
+
+        List<TickerInfoDTO> listAllAndThirtyMinor = new ArrayList<>();
+        List<TickerInfoDTO> listAllAndFortyMedian = new ArrayList<>();
+        List<TickerInfoDTO> listAllAndThirtyBigger = new ArrayList<>();
+
+        for (TickerInfoDTO ticker : allList) {
+            if(listThirtyMinor.contains(ticker)){
+                listAllAndThirtyMinor.add(ticker);
+            }else if(listFortyMedian.contains(ticker)){
+                listAllAndFortyMedian.add(ticker);
+            }else if(listThirtyBigger.contains(ticker)){
+                listAllAndThirtyBigger.add(ticker);
+            }
+        }
+
+        System.out.println("## Creating " + subgroupNames[0] + " (30% -)");
+        portfolioMap.put(subgroupNames[0], listAllAndThirtyMinor);
+        System.out.println(subgroupNames[0].name() + " size: " + listAllAndThirtyMinor.size());
+
+        System.out.println("## Creating " + subgroupNames[1] + " (40% +-)");
+        portfolioMap.put(subgroupNames[1], listAllAndFortyMedian);
+        System.out.println(subgroupNames[1].name() + " size: " + listAllAndFortyMedian.size());
+
+        System.out.println("## Creating " + subgroupNames[2] + " (30% +)");
+        portfolioMap.put(subgroupNames[2], listAllAndThirtyBigger);
+        System.out.println(subgroupNames[2].name() + " size: " + listAllAndThirtyBigger.size());
     }
 
 

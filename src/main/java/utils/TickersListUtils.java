@@ -31,6 +31,10 @@ public class TickersListUtils {
             sortedList = subgroupTickersList.stream()
                     .sorted(Comparator.comparingDouble(TickerInfoDTO::getInv))
                     .collect(Collectors.toList());
+        } else if (SIZE.equals(sortingType)){
+            sortedList = subgroupTickersList.stream()
+                    .sorted(Comparator.comparingDouble(TickerInfoDTO::getSize))
+                    .collect(Collectors.toList());
         } else {
             return null;
         }
