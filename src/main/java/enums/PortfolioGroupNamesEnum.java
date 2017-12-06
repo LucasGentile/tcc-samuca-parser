@@ -31,35 +31,32 @@ public enum PortfolioGroupNamesEnum {
 
     //Portfolio 5050
     S_L,
-    S_L_W,
+    S_H,
+    S_W,
+    S_R,
+    S_A,
+    S_C,
     S_L_W_A,
     S_L_W_C,
-    S_L_R,
     S_L_R_A,
     S_L_R_C,
-    S_H,
-    S_H_W,
     S_H_W_A,
     S_H_W_C,
-    S_H_R,
     S_H_R_A,
     S_H_R_C,
 
     B_L,
-    B_L_W,
+    B_H,
+    B_W,
+    B_R,
+    B_A,
+    B_C,
     B_L_W_A,
     B_L_W_C,
-    B_L_R,
     B_L_R_A,
     B_L_R_C,
-    B_H,
-    B_H_W,
     B_H_W_A,
     B_H_W_C,
-    B_H_R,
     B_H_R_A,
     B_H_R_C,
-
-
-
-    }
+}
