@@ -104,7 +104,7 @@ public class ProcessTickersPortfolioB {
         List<TickerInfoDTO> listHWA = new ArrayList<>();
         List<TickerInfoDTO> listHWC = new ArrayList<>();
 
-        for (TickerInfoDTO tickers : allTickersList) {
+        for (TickerInfoDTO tickers : halfTickersList) {
             if(listL.contains(tickers) && listR.contains(tickers) && listA.contains(tickers)){
                 listLRA.add(tickers);
             } else if(listL.contains(tickers) && listR.contains(tickers) && listC.contains(tickers)){

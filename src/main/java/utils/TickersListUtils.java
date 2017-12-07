@@ -47,7 +47,7 @@ public class TickersListUtils {
     public static List<TickerInfoDTO> sortTickersBySizeWithoutAnyNullValue(List<TickerInfoDTO> allTickersList) {
         System.out.println("## Sorting all tickers by size and discarding all null values");
 
-        List<TickerInfoDTO> sortedListWithouNullValues = allTickersList.stream()
+        List<TickerInfoDTO> sortedListWithoutNullValues = allTickersList.stream()
                 .filter(e -> e.getSize() != null)
                 .filter(e -> e.getBmme() != null)
                 .filter(e -> e.getInv() != null)
@@ -55,9 +55,9 @@ public class TickersListUtils {
                 .sorted(Comparator.comparingDouble(TickerInfoDTO::getSize))
                 .collect(Collectors.toList());
 
-        System.out.println("All tickers list size without null values: " + sortedListWithouNullValues.size());
+        System.out.println("All tickers list size without null values: " + sortedListWithoutNullValues.size());
 
-        return sortedListWithouNullValues;
+        return sortedListWithoutNullValues;
     }
 
     public static List<TickerInfoDTO> getDividedList(List<TickerInfoDTO> allTickers, int size, PortfolioGroupNamesEnum groupNamesEnum, boolean isBottom) {
